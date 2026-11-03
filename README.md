@@ -10,6 +10,7 @@ Built for cloud migration discovery across many applications.
 |---|---|
 | [`agent.md`](agent.md) | AI Catalog registration fields, the system prompt to copy, evals and limits |
 | [`prompt.md`](prompt.md) | Ready-to-use Duo Chat prompts (with and without a Confluence connection, large inputs, follow-ups) |
+| [`ide/mcp.json`](ide/mcp.json) | IDE config to connect GitLab Duo to Confluence Cloud (see [`ide/README.md`](ide/README.md)) |
 
 ## Quick start
 
