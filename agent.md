@@ -19,10 +19,43 @@ Field names can differ between GitLab versions. **Verify on your GitLab version:
 | **Name** | `confluence-app-extractor` |
 | **Description** | Fills the application template page from existing Confluence pages about one app. Every value is cited to its source page; missing and conflicting facts are flagged, never guessed. |
 | **Visibility** | Private to the project/group at first; make it public after evals pass |
-| **Tools** | Read-only only. If a Confluence / Atlassian MCP server is connected to Duo, enable only its *read/get page* and *search* tools. **Do not** enable create/update-page tools in v1; a human pastes the result. |
+| **Available tools** | Leave empty. Atlassian (MCP) tools do **not** appear in this list; you attach the Atlassian server after the agent is created (section 1b). |
 | **System prompt** | Copy everything inside the block in section 2 |
 
-> **Confluence access:** if your Duo instance has no Confluence MCP connection, the agent still works. The user pastes the page contents (or exports them as `.md`/`.txt` into a repo folder the agent can read). See `prompt.md` → Mode B.
+> **Confluence access:** if Atlassian MCP isn't available, the agent still works. The user pastes the page contents (or exports them as `.md`/`.txt` into a repo folder the agent can read). See `prompt.md` → Mode B.
+
+---
+
+## 1b. Connect Confluence Cloud on GitLab.com (Atlassian MCP)
+
+Applies to **GitLab.com + Confluence Cloud** (`*.atlassian.net`). This is an **Experiment** feature in GitLab (18.10+), so expect UI changes. Docs: https://docs.gitlab.com/user/gitlab_duo/model_context_protocol/ai_catalog_mcp_servers/
+
+| # | Step | Who |
+|---|---|---|
+| 1 | Top-level group → **Settings → GitLab Duo → Change configuration** → tick **Experiment and beta features** and **Allow external MCP tools** → **Save changes** | Group Owner |
+| 2 | **Search or go to → Explore → AI Catalog → MCP** tab: confirm **Atlassian** is listed. On GitLab.com, GitLab admins manage this list; you can't add servers yourself. | Anyone |
+| 3 | admin.atlassian.com → **Apps → AI Settings → Rovo MCP Server** → add trusted domain `https://gitlab.com/**` | Atlassian org admin |
+| 4 | Create the agent (section 1) with **Available tools** empty → **Create agent** | Maintainer / Owner |
+| 5 | Project → **AI → Agents** → `confluence-app-extractor` → **Edit** → **MCP servers** section → tick **Atlassian** → **Save changes** | Maintainer / Owner |
+| 6 | Project → **AI → MCP servers** → **Atlassian** → **Connect** → approve in Atlassian | **Every user** (each person connects their own account and sees only the pages they already have access to) |
+| 7 | Turn the agent on for the project, then test it in Duo Chat: `Get the title and last-updated date of Confluence page <URL>` | User |
+
+**Troubleshooting**
+
+| Symptom | Check |
+|---|---|
+| No **MCP** tab in AI Catalog | Step 1 not saved, or the `ai_catalog_mcp_servers` feature flag isn't on for your group. Ask GitLab Support to enable it. |
+| Tools list is empty when creating the agent | Expected. Attach the server via **Edit → MCP servers** (step 5). |
+| No **MCP servers** section on Edit | The agent is managed by a different project from the one where Atlassian is connected; your role is below Maintainer; or a group Owner blocked the server in the MCP Registry. Hard-refresh (Ctrl+F5). |
+| Agent says it can't read Confluence | That user hasn't done step 6, or their Atlassian token expired. Reconnect. |
+
+**Security notes for your security review**
+- Attaching a server gives the agent **all** its tools (Jira too, including write/create tools). You can't restrict an agent to Confluence read-only; only the system prompt's rules limit it, so treat that as a soft control.
+- Experiment status: GitLab says it's "not ready for production use."
+
+**Fallbacks**
+- **IDE route:** Duo Chat in VS Code / JetBrains using [`ide/mcp.json`](ide/mcp.json). This needs only step 1's *Allow external MCP tools*. See [`ide/README.md`](ide/README.md).
+- **Mode B:** paste pages into the chat (`prompt.md`). Works everywhere.
 
 ---
 
@@ -117,6 +150,6 @@ Pick 3 apps whose page is already filled in correctly by hand. Run the agent and
 ## 4. Known limits / next versions
 
 - **v1:** a human reviews the output and pastes it into Confluence.
-- **v2:** if a Confluence MCP *write* tool is approved, add a final step that updates the target page. Keep a human approval step before anything is written.
+- **v2:** once security approves page writes, add a final step that updates the target page through the Atlassian MCP server. Keep a human approval step before anything is written.
 - **v3:** chain it into a flow: Extractor → 7R / cloud-readiness scorer → wave planner.
 - Very long pages can exceed the model's context. If so, run it one source page at a time, then do a merge run (see `prompt.md` → Large inputs).
