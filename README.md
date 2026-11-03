@@ -1,22 +1,28 @@
-# Confluence App Extractor
+# Cloud Migration AI Repo
 
-A GitLab Duo AI Catalog agent that reads several Confluence pages about one application and fills a standard application template page. Every value is cited to its source page; missing or conflicting facts are flagged, never guessed.
+GitLab Duo agents, flows, prompts and rules for a multi-application cloud migration. One folder per asset; every asset is built to run in **GitLab Duo** (AI Catalog / Duo Chat).
 
-Built for cloud migration discovery across many applications.
+## Catalog
 
-## Files
+| Asset | Type | Migration phase | Status | What it does |
+|---|---|---|---|---|
+| [confluence-app-extractor](agents/confluence-app-extractor/) | Agent | Discover & assess | Draft v0.1 | Fills the application template page from existing Confluence pages, with citations |
 
-| File | What it is |
-|---|---|
-| [`agent.md`](agent.md) | AI Catalog registration fields, the system prompt to copy, evals and limits |
-| [`prompt.md`](prompt.md) | Ready-to-use Duo Chat prompts (with and without a Confluence connection, large inputs, follow-ups) |
-| [`ide/mcp.json`](ide/mcp.json) | IDE config to connect GitLab Duo to Confluence Cloud (see [`ide/README.md`](ide/README.md)) |
+## Layout
 
-## Quick start
+```
+.
+├── agents/<agent-name>/     # agent.md (AI Catalog fields + system prompt + evals), prompt.md, README.md
+├── flows/<flow-name>/       # multi-step flows (YAML) + README
+├── prompts/<category>/      # copy-paste Duo Chat prompts
+├── rules/                   # AGENTS.md / Duo rule templates to copy into app repos
+├── confluence/              # Confluence page drafts (playbooks, guides)
+└── ide/                     # shared IDE config (mcp.json for Confluence Cloud)
+```
 
-1. In GitLab, open **AI Catalog → New agent**.
-2. Fill the fields from `agent.md` section 1 and paste the system prompt from section 2.
-3. In Duo Chat, select the agent and use a prompt from `prompt.md`.
-4. Run the evals in `agent.md` section 3 before sharing it with the team.
+## Adding a new asset
 
-> GitLab Duo field names and tool options vary by version. Check them on your instance.
+1. Create `agents/<kebab-case-name>/` (or `flows/...`, `prompts/...`).
+2. Include `README.md`, `agent.md` (purpose, AI Catalog fields, system prompt, guardrails, evals) and `prompt.md`.
+3. Add a row to the **Catalog** table above.
+4. Run the evals before sharing with the team.

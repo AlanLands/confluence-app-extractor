@@ -54,7 +54,7 @@ Applies to **GitLab.com + Confluence Cloud** (`*.atlassian.net`). This is an **E
 - Experiment status: GitLab says it's "not ready for production use."
 
 **Fallbacks**
-- **IDE route:** Duo Chat in VS Code / JetBrains using [`ide/mcp.json`](ide/mcp.json). This needs only step 1's *Allow external MCP tools*. See [`ide/README.md`](ide/README.md).
+- **IDE route:** Duo Chat in VS Code / JetBrains using [`ide/mcp.json`](../../ide/mcp.json). This needs only step 1's *Allow external MCP tools*. See [`ide/README.md`](../../ide/README.md).
 - **Mode B:** paste pages into the chat (`prompt.md`). Works everywhere.
 
 ---

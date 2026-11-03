@@ -15,7 +15,7 @@ Use this when the AI Catalog **MCP servers** option isn't available yet. It work
    - **One repo only:** `.gitlab/duo/mcp.json` in that repo
 2. Restart the IDE.
 3. In Duo Chat, ask a Confluence question. Sign in to Atlassian when the browser opens.
-4. Paste the system prompt from [`../agent.md`](../agent.md) at the start of the chat, then use Mode A from [`../prompt.md`](../prompt.md).
+4. Paste the system prompt from the agent's `agent.md` (e.g. [confluence-app-extractor](../agents/confluence-app-extractor/agent.md)) at the start of the chat, then use Mode A from that agent's `prompt.md`.
 
 ## Troubleshooting
 - **VS Code:** Command Palette → `GitLab: Show MCP Dashboard` shows the connection status and tools.
